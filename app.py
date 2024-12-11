@@ -11,7 +11,6 @@ app = Flask(__name__)
 classes = ["Severe", "Proliferate_DR", "No_DR", "Moderate", "Mild"]
 
 # Load the trained model
-# Load the trained model
 model_path = "best_model.pth"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -22,7 +21,6 @@ model.fc = torch.nn.Linear(model.fc.in_features, len(classes))  # Adjust final l
 model.load_state_dict(torch.load(model_path, map_location=device))
 model = model.to(device)
 model.eval()
-
 
 # Define the image transformation
 transform = transforms.Compose([
@@ -68,4 +66,5 @@ def predict():
         return jsonify({'prediction': predicted_class})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Use Render's PORT or default to 5000
+    app.run(host='0.0.0.0', port=port)
